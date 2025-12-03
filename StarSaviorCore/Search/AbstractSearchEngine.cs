@@ -3,10 +3,17 @@
     public abstract class AbstractSearchEngine
     {
         public string Name { get; }
+        public string Description { get; }
 
-        public AbstractSearchEngine(string engineName)
+        public AbstractSearchEngine(string engineName) : this(engineName, $"\"{engineName}\" 버전 검색 엔진입니다.")
+        {
+
+        }
+
+        public AbstractSearchEngine(string engineName, string description)
         {
             Name = engineName;
+            Description = description;
         }
 
         public async Task<SearchResult> Search(OcrReader reader, string windowName, int timeoutMilliseconds = 4000)

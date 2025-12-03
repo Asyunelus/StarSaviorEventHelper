@@ -16,6 +16,6 @@ namespace EndoAshu.StarSavior.Core
         }
         public static readonly string BASE_PATH = "https://raw.githubusercontent.com/Asyunelus/StarSaviorEventHelperDB/refs/heads/main/";
 
-        public static readonly string VERSION = "v0.1.1-beta";
+        public static readonly string VERSION = "v0.2-beta";
     }
 }

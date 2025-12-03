@@ -1,4 +1,6 @@
-﻿namespace Program
+﻿using EndoAshu.StarSavior.Core;
+
+namespace Program
 {
     partial class Form1
     {
@@ -47,6 +49,8 @@
             labelLoading = new Label();
             timer1 = new System.Windows.Forms.Timer(components);
             checkBoxAutoRefresh = new CheckBox();
+            settingBtn = new Button();
+            labelRefName = new Label();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             panel3.SuspendLayout();
@@ -67,7 +71,7 @@
             // 
             panel1.Controls.Add(labelEventSelect1Effect);
             panel1.Controls.Add(labelEventSelect1Name);
-            panel1.Location = new Point(12, 87);
+            panel1.Location = new Point(12, 104);
             panel1.Name = "panel1";
             panel1.Size = new Size(384, 176);
             panel1.TabIndex = 1;
@@ -96,10 +100,10 @@
             // labelEventName
             // 
             labelEventName.AutoSize = true;
-            labelEventName.Font = new Font("맑은 고딕", 13F);
-            labelEventName.Location = new Point(12, 44);
+            labelEventName.Font = new Font("맑은 고딕", 12F);
+            labelEventName.Location = new Point(12, 49);
             labelEventName.Name = "labelEventName";
-            labelEventName.Size = new Size(60, 25);
+            labelEventName.Size = new Size(54, 21);
             labelEventName.TabIndex = 2;
             labelEventName.Text = "label3";
             // 
@@ -117,7 +121,7 @@
             // 
             panel2.Controls.Add(labelEventSelect2Effect);
             panel2.Controls.Add(labelEventSelect2Name);
-            panel2.Location = new Point(12, 269);
+            panel2.Location = new Point(12, 286);
             panel2.Name = "panel2";
             panel2.Size = new Size(384, 176);
             panel2.TabIndex = 2;
@@ -147,7 +151,7 @@
             // 
             panel3.Controls.Add(labelEventSelect3Effect);
             panel3.Controls.Add(labelEventSelect3Name);
-            panel3.Location = new Point(12, 451);
+            panel3.Location = new Point(12, 468);
             panel3.Name = "panel3";
             panel3.Size = new Size(384, 176);
             panel3.TabIndex = 2;
@@ -177,7 +181,7 @@
             // 
             panel4.Controls.Add(labelEventSelect4Effect);
             panel4.Controls.Add(labelEventSelect4Name);
-            panel4.Location = new Point(12, 633);
+            panel4.Location = new Point(12, 650);
             panel4.Name = "panel4";
             panel4.Size = new Size(384, 176);
             panel4.TabIndex = 4;
@@ -229,12 +233,34 @@
             checkBoxAutoRefresh.UseVisualStyleBackColor = true;
             checkBoxAutoRefresh.CheckedChanged += checkBoxAutoRefresh_CheckedChanged;
             // 
+            // settingBtn
+            // 
+            settingBtn.Location = new Point(321, 73);
+            settingBtn.Name = "settingBtn";
+            settingBtn.Size = new Size(75, 23);
+            settingBtn.TabIndex = 7;
+            settingBtn.Text = "설정";
+            settingBtn.UseVisualStyleBackColor = true;
+            settingBtn.Click += settingBtn_Click;
+            // 
+            // labelRefName
+            // 
+            labelRefName.AutoSize = true;
+            labelRefName.Font = new Font("맑은 고딕", 13F);
+            labelRefName.Location = new Point(12, 70);
+            labelRefName.Name = "labelRefName";
+            labelRefName.Size = new Size(60, 25);
+            labelRefName.TabIndex = 8;
+            labelRefName.Text = "label1";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(408, 826);
+            ClientSize = new Size(408, 844);
+            Controls.Add(labelRefName);
+            Controls.Add(settingBtn);
             Controls.Add(checkBoxAutoRefresh);
             Controls.Add(labelLoading);
             Controls.Add(panel4);
@@ -246,7 +272,7 @@
             Controls.Add(button1);
             MaximizeBox = false;
             Name = "Form1";
-            Text = "Form1";
+            Text = $"StarSavior 이벤트 화면 인식기 ({DataServer.VERSION})";
             Load += Form1_Load;
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
@@ -280,5 +306,7 @@
         private Label labelLoading;
         private System.Windows.Forms.Timer timer1;
         private CheckBox checkBoxAutoRefresh;
+        private Button settingBtn;
+        private Label labelRefName;
     }
 }

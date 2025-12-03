@@ -52,9 +52,15 @@ namespace Program
 
             await Task.Delay(100);
 
+            if (SearchEngine.Current == null)
+            {
+                ApplyNone(new SearchResult(SearchResultType.Failed_EngineNotSet));
+                return;
+            }
+
             try
             {
-                var result = await SearchEngine.Current.Search(reader, "스타세이비어");
+                var result = await SearchEngine.Current!.Search(reader, "스타세이비어");
                 if (result.IsFailed)
                 {
                     ApplyNone(result);
@@ -70,11 +76,18 @@ namespace Program
                         },
                         result.Type switch
                         {
-                            SearchResultType.Journey => result.Journey!.Data!.Name,
-                            SearchResultType.Arcana => $"{(result.Arcana!.EventIndex >= 0 ? result.Arcana!.Data!.CardEvents[result.Arcana!.EventIndex].Name : "Undefined")} ({result.Arcana!.Data!.Name})",
+                            SearchResultType.Journey => "",
+                            SearchResultType.Arcana => $"{result.Arcana!.Data!.Name}",
                             _ => "Unknown Error",
                         },
-                        result.Type switch {
+                        result.Type switch
+                        {
+                            SearchResultType.Journey => result.Journey!.Data!.Name,
+                            SearchResultType.Arcana => $"{(result.Arcana!.EventIndex >= 0 ? result.Arcana!.Data!.CardEvents[result.Arcana!.EventIndex].Name : "Undefined")}",
+                            _ => "Unknown Error",
+                        },
+                        result.Type switch
+                        {
                             SearchResultType.Journey => result.FromJourney(),
                             SearchResultType.Arcana => result.FromArcana(),
                             _ => Array.Empty<ApplyItem>(),
@@ -104,9 +117,12 @@ namespace Program
         {
             if (result.ErrorObject != null)
             {
-                labelEventName.Text = $"{result.Type.ToString()} ({result.ErrorObject.ToString()})";
-            } else
+                labelRefName.Text = $"{result.ErrorObject.ToString()}";
+                labelEventName.Text = $"{result.Type.ToString()}";
+            }
+            else
             {
+                labelRefName.Text = "";
                 labelEventName.Text = result.Type.ToString();
             }
             labelEventType.Text = "Not Detected";
@@ -122,18 +138,20 @@ namespace Program
                 labelLoading.Text = "화면인식 실패 (재시도 대기중...)";
                 timer1.Interval = 1000;
                 timer1.Start();
-            } else
+            }
+            else
             {
                 labelLoading.Text = "화면인식 실패...";
             }
             isLoading = false;
         }
 
-        private void ApplyText(string type, string name, ApplyItem[] items)
+        private void ApplyText(string type, string name, string refName, ApplyItem[] items)
         {
             labelLoading.Text = "화면인식 성공";
             labelEventType.Text = type;
             labelEventName.Text = name;
+            labelRefName.Text = refName;
 
             ApplyItemText(items.Length >= 1 ? items[0] : null, labelEventSelect1Name, labelEventSelect1Effect);
             ApplyItemText(items.Length >= 2 ? items[1] : null, labelEventSelect2Name, labelEventSelect2Effect);
@@ -180,6 +198,11 @@ namespace Program
                     timer1.Start();
                 }
             }
+        }
+
+        private void settingBtn_Click(object sender, EventArgs e)
+        {
+            new SettingForm().ShowDialog();
         }
     }
 }

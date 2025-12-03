@@ -73,7 +73,7 @@ namespace EndoAshu.StarSavior.Core {
                 }
             }
         }
-        public string Capture(RECT rect, Action<Bitmap>? debug = null)
+        public string Capture(RECT rect, int binarize = 90, Action<Bitmap>? debug = null)
         {
             using (Bitmap rawBmp = CaptureBitmap(rect))
             {
@@ -86,7 +86,7 @@ namespace EndoAshu.StarSavior.Core {
                 using (Bitmap resizeBmp = ResizeImage(rawBmp, scale))
                 using (Bitmap bmp = MakeGrayscale(resizeBmp))
                 {
-                    Binarize(bmp, 90);
+                    Binarize(bmp, binarize);
 
                     debug?.Invoke(bmp);
 

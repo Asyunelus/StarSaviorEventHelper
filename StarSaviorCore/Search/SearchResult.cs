@@ -1,6 +1,5 @@
 ﻿using EndoAshu.StarSavior.Core.DataSet;
 using EndoAshu.StarSavior.Core.Search.Data;
-using System.Collections.Generic;
 using System.Text;
 namespace EndoAshu.StarSavior.Core.Search
 {
@@ -9,12 +8,14 @@ namespace EndoAshu.StarSavior.Core.Search
         Arcana,
         Journey,
         Failed_Timeout,
+        Failed_NotFoundEventType,
         Failed_NotFoundWindow,
         Failed_NotEventOnScreen,
         Failed_NotFoundJourneyData,
         Failed_NotFoundArcanaData,
         Failed_Exception,
         Failed_SearchWait,
+        Failed_EngineNotSet,
         Failed_Unknown
     }
 
@@ -117,7 +118,11 @@ namespace EndoAshu.StarSavior.Core.Search
                 {
                     sb.Append($"[{select.Type}]");
                     sb.AppendLine();
-                    sb.Append(string.Join(", ", select.Effect.Select(e => e.ToString())));
+                    if (select.Effect.Length > 0)
+                    {
+                        sb.Append(string.Join(", ", select.Effect.Select(e => e.ToString())));
+                        sb.AppendLine();
+                    }
                     sb.AppendLine();
                 }
 

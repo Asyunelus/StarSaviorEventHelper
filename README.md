@@ -1,4 +1,8 @@
 # 스타 세이비어 이벤트 인식기
+![GitHub Downloads](https://img.shields.io/github/downloads/Asyunelus/StarSaviorEventHelper/total)
+![GitHub Downloads](https://img.shields.io/github/downloads/Asyunelus/StarSaviorEventHelper/latest/total)
+
+## 개요
 > [스타세이비어 아르카나 DB 사이트](https://kanohban.github.io/StarSaviorArcanaDB/index.html) 를 기반으로 제작하였습니다.
 
 - 현재 21:9 모니터에서 테스트 진행되었으나, 16:9 화면에서는 테스트가 진행되지 않았습니다.

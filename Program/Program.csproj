@@ -6,6 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>StarSaviorEvent</AssemblyName>
+    <BaseOutputPath></BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,5 +19,9 @@
   <ItemGroup>
     <ProjectReference Include="..\StarSaviorCore\StarSaviorCore.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)*.*&quot; &quot;$(SolutionDir)Output\$(Configuration)\&quot; /E /Y /I" />
+  </Target>
 
 </Project>

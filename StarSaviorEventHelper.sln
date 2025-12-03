@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35913.81 d17.13
+VisualStudioVersion = 17.13.35913.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Program", "Program\Program.csproj", "{B96D3FFF-B82F-4A2A-963D-91FBCA1987D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarSaviorCore", "StarSaviorCore\StarSaviorCore.csproj", "{09EFF1FC-7834-45E9-B374-C1342B3389F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Update", "Update\Update.csproj", "{294B67D1-09E4-4C1A-AE52-83C0A284D5DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{09EFF1FC-7834-45E9-B374-C1342B3389F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09EFF1FC-7834-45E9-B374-C1342B3389F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09EFF1FC-7834-45E9-B374-C1342B3389F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{294B67D1-09E4-4C1A-AE52-83C0A284D5DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294B67D1-09E4-4C1A-AE52-83C0A284D5DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294B67D1-09E4-4C1A-AE52-83C0A284D5DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294B67D1-09E4-4C1A-AE52-83C0A284D5DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

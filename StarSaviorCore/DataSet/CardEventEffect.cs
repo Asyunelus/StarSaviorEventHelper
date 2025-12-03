@@ -9,5 +9,10 @@ namespace EndoAshu.StarSavior.Core.DataSet
 
         [JsonPropertyName("수치")]
         public string Value { get; set; } = string.Empty;
+
+        public override string ToString()
+        {
+            return $"{Type} {Value}";
+        }
     }
 }

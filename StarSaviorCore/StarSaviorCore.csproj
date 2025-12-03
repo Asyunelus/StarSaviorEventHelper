@@ -17,9 +17,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="images\detect\na.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="tdata\eng.traineddata">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -6,6 +6,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
 {
     public sealed class V0_2_Beta_SearchEngine : AbstractSearchEngine
     {
+        public override bool IsRecommend => DataServer.VERSION_CODE <= 0_000_002_01;
         public V0_2_Beta_SearchEngine() : base("v0.2-beta", "아르카나 카드 인식 로직을 일부 최적화하여 더 빠르고 낮은 성능으로 사용할 수 있게 개선한 버전입니다.")
         {
         }

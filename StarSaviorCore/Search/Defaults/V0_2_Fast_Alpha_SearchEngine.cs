@@ -1,12 +1,13 @@
 ﻿using EndoAshu.StarSavior.Core.Search.Data;
 using OpenCvSharp;
 using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
 
 namespace EndoAshu.StarSavior.Core.Search.Defaults
 {
     public sealed class V0_2_Fast_Alpha_SearchEngine : AbstractSearchEngine
     {
+        public override bool IsExperimental => true;
+
         public V0_2_Fast_Alpha_SearchEngine() : base("v0.2-fast-alpha", "아르카나 카드 인식 로직을 일부 최적화하여 더 빠르고 낮은 성능으로 사용할 수 있게 개선한 버전입니다.\nv0.2-beta를 기반으로 더 최적화하였지만, 불안정합니다.")
         {
         }

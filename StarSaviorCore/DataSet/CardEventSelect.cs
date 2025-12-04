@@ -9,5 +9,7 @@ namespace EndoAshu.StarSavior.Core.DataSet
 
         [JsonPropertyName("획득")]
         public CardEventEffect[] Effect { get; set; } = Array.Empty<CardEventEffect>();
+
+        public bool IsEmpty => Effect.Length == 0 || Effect.Where(e => !string.IsNullOrEmpty(e.Value)).Count() == 0;
     }
 }

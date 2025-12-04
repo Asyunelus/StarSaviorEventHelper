@@ -2,6 +2,9 @@
 {
     public abstract class AbstractSearchEngine
     {
+        public virtual bool IsRecommend => false;
+        public virtual bool IsExperimental => false;
+
         public string Name { get; }
         public string Description { get; }
 

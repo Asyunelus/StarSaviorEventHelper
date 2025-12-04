@@ -8,18 +8,27 @@ namespace EndoAshu.StarSavior.Core
     {
         private class SaveData
         {
-            [JsonPropertyName("engine")]
+            [JsonPropertyName("engine_after_v0_2_2")]
             [JsonRequired]
             public string Engine { get; set; } = string.Empty;
 
             [JsonPropertyName("latest_data")]
             [JsonRequired]
             public string LatestDataVersion { get; set; } = string.Empty;
+
+            [JsonPropertyName("top_most")]
+            public bool TopMost { get; set; } = false;
+
+            [JsonPropertyName("theme")]
+            public string Theme { get; set; } = "Dark";
         }
 
         private static readonly string saveConfig = "./config.json";
 
         public static string LatestDataVersion { get; set; } = string.Empty;
+
+        public static bool TopMost { get; set; } = false;
+        public static string Theme { get; set; } = "Dark";
 
         public static void Load()
         {
@@ -36,6 +45,8 @@ namespace EndoAshu.StarSavior.Core
 
                     SearchEngine.Current = SearchEngine.Items.FirstOrDefault(e => e.Name == data.Engine);
                     LatestDataVersion = data.LatestDataVersion;
+                    TopMost = data.TopMost;
+                    Theme = data.Theme;
                 }
             } catch(Exception)
             {
@@ -49,6 +60,8 @@ namespace EndoAshu.StarSavior.Core
 
             data.Engine = SearchEngine.Current == null ? SearchEngine.Items.First().Name : SearchEngine.Current.Name;
             data.LatestDataVersion = LatestDataVersion;
+            data.TopMost = TopMost;
+            data.Theme = Theme;
 
             using (Stream fs = File.Create(saveConfig))
             {

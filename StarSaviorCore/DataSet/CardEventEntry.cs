@@ -59,16 +59,20 @@ namespace EndoAshu.StarSavior.Core.DataSet
             }
         }
 
-            
         [JsonIgnore]
-        public ICollection<(string, CardEventSelect[])> Selects =>
-        [
-            (SelectName.Count > 0 ? SelectName[0] : string.Empty, Select1),
-            (SelectName.Count > 1 ? SelectName[1] : string.Empty, Select2),
-            (SelectName.Count > 2 ? SelectName[2] : string.Empty, Select3),
-            (SelectName.Count > 3 ? SelectName[3] : string.Empty, Select4),
-            (SelectName.Count > 4 ? SelectName[4] : string.Empty, Select5)
-        ];
+        public ICollection<(string, CardEventSelect[])> Selects
+        {
+            get
+            {
+                var selectProps = new[] { Select1, Select2, Select3, Select4, Select5 };
+                var selName = SelectName ?? new List<string>();
+                return selectProps
+                    .Where(e => e.Where(i => !i.IsEmpty).Count() > 0)
+                    .Take(selName.Count)
+                    .Select((prop, index) => (selName[index], prop))
+                    .ToList();
+            }
+        }
 
         public override string ToString()
         {

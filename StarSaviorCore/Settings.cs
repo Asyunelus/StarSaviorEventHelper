@@ -11,9 +11,15 @@ namespace EndoAshu.StarSavior.Core
             [JsonPropertyName("engine")]
             [JsonRequired]
             public string Engine { get; set; } = string.Empty;
+
+            [JsonPropertyName("latest_data")]
+            [JsonRequired]
+            public string LatestDataVersion { get; set; } = string.Empty;
         }
 
         private static readonly string saveConfig = "./config.json";
+
+        public static string LatestDataVersion { get; set; } = string.Empty;
 
         public static void Load()
         {
@@ -29,6 +35,7 @@ namespace EndoAshu.StarSavior.Core
                     var data = JsonSerializer.Deserialize<SaveData>(fs)!;
 
                     SearchEngine.Current = SearchEngine.Items.FirstOrDefault(e => e.Name == data.Engine);
+                    LatestDataVersion = data.LatestDataVersion;
                 }
             } catch(Exception)
             {
@@ -41,6 +48,7 @@ namespace EndoAshu.StarSavior.Core
             SaveData data = new SaveData();
 
             data.Engine = SearchEngine.Current == null ? SearchEngine.Items.First().Name : SearchEngine.Current.Name;
+            data.LatestDataVersion = LatestDataVersion;
 
             using (Stream fs = File.Create(saveConfig))
             {

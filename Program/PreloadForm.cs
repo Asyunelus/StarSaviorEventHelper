@@ -53,6 +53,8 @@ namespace Program
             StartLoad();
         }
 
+        const int TOTAL_LOAD_STEP = 6;
+
         private async void StartLoad()
         {
             using HttpClient client = new HttpClient();
@@ -62,12 +64,11 @@ namespace Program
                 NoStore = true
             };
 
-            const int total = 6;
-            UpdateUI(1, total, "프로그램 업데이트가 있는지 확인하는중...", 0, "Fetch Github Server...");
+            UpdateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트가 있는지 확인하는중...", 0, "Fetch Github Server...");
 
             string pubJson = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}publish.json?cache_buster={Guid.NewGuid().ToString()}", progress =>
             {
-                UpdateUI(1, total, "프로그램 업데이트가 있는지 확인하는중...", (int)(progress * 100.0f), "Fetch Github Server...");
+                UpdateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트가 있는지 확인하는중...", (int)(progress * 100.0f), "Fetch Github Server...");
             });
             DataServer.PublishJson? pubData = JsonSerializer.Deserialize<DataServer.PublishJson>(pubJson);
 
@@ -83,10 +84,10 @@ namespace Program
                 DialogResult res = MessageBox.Show($"현재 버전 : {DataServer.VERSION}\n새로운 버전 : {pubData.Version}\n\n업데이트를 진행해야 실행이 가능합니다.\n진행하시겠습니까?", "업데이트 존재", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
                 if (res == DialogResult.Yes)
                 {
-                    UpdateUI(1, total, "프로그램 업데이트를 받는 중...", 0, "Download Update File...");
+                    UpdateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트를 받는 중...", 0, "Download Update File...");
                     byte[] updateZip = await FetchBytesWithProgressAsync(client, pubData.DownloadPath, progress =>
                     {
-                        UpdateUI(1, total, "프로그램 업데이트를 받는 중...", (int)(progress * 100.0f), "Download Update File...");
+                        UpdateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트를 받는 중...", (int)(progress * 100.0f), "Download Update File...");
                     });
 
                     string tempPath = Path.GetFullPath("./temp_update.zip");
@@ -102,81 +103,38 @@ namespace Program
                 return;
             }
 
-            UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", 0, "Fetch Github Server...");
+            UpdateUI(2, TOTAL_LOAD_STEP, "새로운 선택지가 있는지 확인하는중...", 0, "Fetch Github Server...");
 
             await Task.Delay(100);
 
-            string cards = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}data/cards.json", progress =>
+            UpdateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", 0, "Compare Data Hash...");
+            await Task.Delay(100);
+
+            int idx = 0;
+
+            foreach (string filePath in pubData.DataJsonFiles)
             {
-                UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", (int)(progress * 33.0f), "Fetch cards.json");
-            });
-
-            await Task.Delay(50);
-            string journeyData = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}data/journey_data.json", progress =>
-            {
-                UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", (int)(progress * 33.0f) + 33, "Fetch journey_data.json");
-            });
-
-            await Task.Delay(50);
-            string potentials = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}data/potentials.json", progress =>
-            {
-                UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", (int)(progress * 33.0f) + 33, "Fetch potentials.json");
-            });
-
-            await Task.Delay(50);
-            string na = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}images/detect/na.png", progress =>
-            {
-                UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", (int)(progress * 1.0f) + 99, "Fetch na.png");
-            });
-
-            await Task.Delay(50);
-            UpdateUI(2, total, "새로운 선택지가 있는지 확인하는중...", 100, "데이터 교체 여부 확인중");
-
-            bool saveCards = CalculateSha256Hash(cards) != await CalculateSha256HashWithPathAsync("./data/cards.json");
-            bool saveJourney = CalculateSha256Hash(journeyData) != await CalculateSha256HashWithPathAsync("./data/journey_data.json");
-            bool savePotentials = CalculateSha256Hash(potentials) != await CalculateSha256HashWithPathAsync("./data/potentials.json");
-            bool saveNaImage = CalculateSha256Hash(na) != await CalculateSha256HashWithPathAsync("./images/detect/na.png");
-
-            if (saveJourney || saveCards || savePotentials || saveNaImage)
-            {
-                UpdateUI(3, total, "새로운 선택지 데이터를 저장하는중...", 0, "Save Server Data...");
-
-                if (saveCards)
-                {
-                    File.WriteAllText("./data/cards.json", cards);
-                }
-                if (saveJourney)
-                {
-                    File.WriteAllText("./data/journey_data.json", journeyData);
-                }
-                if (savePotentials)
-                {
-                    File.WriteAllText("./data/potentials.json", potentials);
-                }
-                if (saveNaImage)
-                {
-                    File.WriteAllText("./images/detect/na.png", na);
-                }
-
-                await Task.Delay(50);
-                UpdateUI(3, total, "새로운 선택지 데이터를 저장하는중...", 100, "Save Server Data...");
+                await FetchUpdate(client, pubData.DataVersion, filePath, ++idx, pubData.DataJsonFiles.Count);
             }
             await Task.Delay(50);
 
-            UpdateUI(4, total, "선택지 데이터를 불러오는중...", 0, "선택지 데이터 파일을 읽는중...");
+            Settings.LatestDataVersion = pubData.DataVersion;
+            Settings.Save();
+
+            UpdateUI(4, TOTAL_LOAD_STEP, "선택지 데이터를 불러오는중...", 0, "선택지 데이터 파일을 읽는중...");
             await EventLoader.Load();
             await Task.Delay(50);
-            UpdateUI(4, total, "선택지 데이터를 불러오는중...", 100, "선택지 데이터 파일을 읽는중...");
+            UpdateUI(4, TOTAL_LOAD_STEP, "선택지 데이터를 불러오는중...", 100, "선택지 데이터 파일을 읽는중...");
             await Task.Delay(50);
 
-            UpdateUI(5, total, "아르카나 카드 이미지가 있는지 확인하는중...", 0, "대기중...");
+            UpdateUI(5, TOTAL_LOAD_STEP, "아르카나 카드 이미지가 있는지 확인하는중...", 0, "대기중...");
 
             var card = EventLoader.ArcanaCards;
-            int idx = 0;
+            idx = 0;
             foreach(var c in card)
             {
                 if (string.IsNullOrEmpty(c.Image)) continue;
-                UpdateUI(5, total, "아르카나 카드 이미지가 있는지 확인하는중...", (int)(idx * 100.0f / card.Count), $"Check File Exists : \"{c.Image}\"");
+                UpdateUI(5, TOTAL_LOAD_STEP, "아르카나 카드 이미지가 있는지 확인하는중...", (int)(idx * 100.0f / card.Count), $"Check File Exists : \"{c.Image}\"");
 
                 string saveImgPath = $"./{c.Image}";
 
@@ -187,15 +145,36 @@ namespace Program
                 }
                 ++idx;
             }
-            UpdateUI(5, total, "아르카나 카드 이미지가 있는지 확인하는중...", 100, "완료");
+            UpdateUI(5, TOTAL_LOAD_STEP, "아르카나 카드 이미지가 있는지 확인하는중...", 100, "완료");
 
             await Task.Delay(50);
 
-            UpdateUI(6, total, "업데이트 완료", 100, "완료");
+            UpdateUI(6, TOTAL_LOAD_STEP, "업데이트 완료", 100, "완료");
 
             _loaded = true;
             await Task.Delay(500);
             Close();
+        }
+
+        private async Task FetchUpdate(HttpClient client, string dataVer, string filePath, int idx, int maxIdx)
+        {
+            if (!File.Exists(filePath) || Settings.LatestDataVersion != dataVer)
+            {
+                var baseUri = new Uri(DataServer.BASE_PATH);
+                var result = new Uri(baseUri, filePath);
+
+                string res = await FetchStringWithProgressAsync(client, result.ToString(), progress =>
+                {
+                    UpdateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", (int)(progress * 100.0f), $"Download File : {Path.GetFileName(filePath)} ({idx}/{maxIdx})");
+                });
+
+                UpdateUI(3, TOTAL_LOAD_STEP, "데이터를 저장하는중...", 100, $"Save File : {Path.GetFileName(filePath)} ({idx}/{maxIdx})");
+                File.WriteAllText(filePath, res);
+            } else
+            {
+                UpdateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", 100, $"{Path.GetFileName(filePath)} file is the latest version. Skip... ({idx}/{maxIdx})");
+            }
+            await Task.Delay(100);
         }
 
         private void UpdateUI(int totalIdx, int totalMax, string what, int current, string currentWhat)

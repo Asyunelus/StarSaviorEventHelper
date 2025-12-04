@@ -13,9 +13,17 @@ namespace EndoAshu.StarSavior.Core
             [JsonPropertyName("downloadPath")]
             [JsonRequired]
             public string DownloadPath { get; set; } = string.Empty;
+
+            [JsonPropertyName("data_version")]
+            [JsonRequired]
+            public string DataVersion { get; set; } = string.Empty;
+
+            [JsonPropertyName("data_files")]
+            [JsonRequired]
+            public List<string> DataJsonFiles { get; set; } = new List<string>();
         }
         public static readonly string BASE_PATH = "https://raw.githubusercontent.com/Asyunelus/StarSaviorEventHelperDB/refs/heads/main/";
 
-        public static readonly string VERSION = "v0.2-beta";
+        public static readonly string VERSION = "v0.2.1-beta";
     }
 }

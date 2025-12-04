@@ -122,7 +122,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
                 return new SearchResult(SearchResultType.Failed_NotFoundArcanaData, eventName);
             }
 
-            Mat mat = ImageMatcher.PrepareScreenMat(cardImage)!;
+            using Mat mat = ImageMatcher.PrepareScreenMat(cardImage)!;
 
             var searchTasks = searchFirst.Take(3).Select(tuple => Task.Run(() => {
                 int idx = tuple.idx;

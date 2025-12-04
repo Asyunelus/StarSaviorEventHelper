@@ -40,6 +40,10 @@ namespace EndoAshu.StarSavior.Core
                 NoCache = true,
                 NoStore = true
             };
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+            client.DefaultRequestHeaders.AcceptLanguage.ParseAdd("ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7");
+            client.DefaultRequestHeaders.Add("Referer", "https://arca.live/b/starsavior");
+            client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
 
             updateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트가 있는지 확인하는중...", 0, "Fetch Github Server...");
 

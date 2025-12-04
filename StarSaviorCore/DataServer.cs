@@ -24,7 +24,7 @@ namespace EndoAshu.StarSavior.Core
         }
         public static readonly string BASE_PATH = "https://raw.githubusercontent.com/Asyunelus/StarSaviorEventHelperDB/refs/heads/main/";
 
-        public static readonly string VERSION = "v0.2.2-beta";
+        public static readonly string VERSION = "v0.2.3-beta";
 
         /// <summary>
         /// Version 코드 작성법
@@ -37,6 +37,6 @@ namespace EndoAshu.StarSavior.Core
         /// 1.3.4일 경우 001_003_04
         /// 
         /// </summary>
-        public static readonly long VERSION_CODE = 0_000_002_02;
+        public static readonly long VERSION_CODE = 0_000_002_03;
     }
 }

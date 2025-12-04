@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using EndoAshu.StarSavior.Core.Search;
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Security.Cryptography;
 using System.Text;
@@ -13,7 +14,7 @@ namespace EndoAshu.StarSavior.Core
         public delegate void ErrorDialog(string title, string message);
         public delegate void Shutdown();
 
-        const int TOTAL_LOAD_STEP = 6;
+        const int TOTAL_LOAD_STEP = 7;
 
         public static async void StartLoad(UpdateUIFunction updateUI, YesNoDialog showYesNo, ErrorDialog showError, Action onSuccess, Action onClose)
         {
@@ -131,7 +132,14 @@ namespace EndoAshu.StarSavior.Core
 
             await Task.Delay(50);
 
-            updateUI(6, TOTAL_LOAD_STEP, "업데이트 완료", 100, "완료");
+            updateUI(6, TOTAL_LOAD_STEP, "OCR 모델을 불러오는중", 0, "Loading OCR Model...");
+            await Task.Delay(50);
+            Task.Run(() => SearchEngine.Initialize()).Wait();
+            updateUI(6, TOTAL_LOAD_STEP, "OCR 모델을 불러오는중", 100, "Loading OCR Model...");
+
+            await Task.Delay(100);
+
+            updateUI(7, TOTAL_LOAD_STEP, "업데이트 완료", 100, "완료");
 
             await Task.Delay(500);
             onSuccess();

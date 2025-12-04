@@ -85,7 +85,7 @@
 
                 <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
                     <CheckBox Content="자동 갱신" 
-                          IsChecked="True" 
+                          IsChecked="False" 
                           VerticalAlignment="Center" 
                           Margin="0,0,15,0"
                           Checked="AutoRefresh_Checked" 
@@ -184,22 +184,22 @@
                                        Margin="0,0,0,12" 
                                        TextWrapping="Wrap"/>
 
-                                <DockPanel Style="{DynamicResource OutcomeRowPanelStyle}"
+                                <DockPanel ToolTipService.InitialShowDelay="100" Style="{DynamicResource OutcomeRowPanelStyle}"
                                        Visibility="{Binding FixedOutcome, Converter={StaticResource StringNotEmptyToVisibility}}">
                                     <TextBlock FontSize="15" Text="[고정]" Style="{DynamicResource OutcomeLabelStyle}" Foreground="{DynamicResource SubText}"/>
-                                    <TextBlock FontSize="15" Text="{Binding FixedOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
+                                    <TextBlock FontSize="15" local:TextPotentialsInlineHelper.BoundText="{Binding FixedOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
                                 </DockPanel>
 
-                                <DockPanel Style="{DynamicResource OutcomeRowPanelStyle}"
+                                <DockPanel ToolTipService.InitialShowDelay="100" Style="{DynamicResource OutcomeRowPanelStyle}"
                                        Visibility="{Binding SuccessOutcome, Converter={StaticResource StringNotEmptyToVisibility}}">
                                     <TextBlock FontSize="15" Text="[성공]" Style="{DynamicResource OutcomeLabelStyle}" Foreground="{DynamicResource SuccessGreen}"/>
-                                    <TextBlock FontSize="15" Text="{Binding SuccessOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
+                                    <TextBlock FontSize="15" local:TextPotentialsInlineHelper.BoundText="{Binding SuccessOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
                                 </DockPanel>
 
-                                <DockPanel Style="{DynamicResource OutcomeRowPanelStyle}"
+                                <DockPanel ToolTipService.InitialShowDelay="100" Style="{DynamicResource OutcomeRowPanelStyle}"
                                        Visibility="{Binding FailureOutcome, Converter={StaticResource StringNotEmptyToVisibility}}">
                                     <TextBlock FontSize="15" Text="[실패]" Style="{DynamicResource OutcomeLabelStyle}" Foreground="{DynamicResource FailureRed}"/>
-                                    <TextBlock FontSize="15" Text="{Binding FailureOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
+                                    <TextBlock FontSize="15" local:TextPotentialsInlineHelper.BoundText="{Binding FailureOutcome}" Style="{DynamicResource OutcomeTextStyle}" Foreground="{DynamicResource MainForeground}"/>
                                 </DockPanel>
                             </StackPanel>
                         </Border>

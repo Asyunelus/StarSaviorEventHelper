@@ -12,6 +12,9 @@ namespace EndoAshu.StarSavior.Core
 
         private static readonly Dictionary<int, CardDataWrapper> _arcana = new Dictionary<int, CardDataWrapper>();
         private static readonly List<JourneyDataWrapper> _journey = new List<JourneyDataWrapper>();
+        private static readonly Dictionary<string, string> _potentials = new Dictionary<string, string>();
+
+        public static IDictionary<string, string> Potentials => _potentials;
 
         public static ICollection<CardDataWrapper> ArcanaCards => _arcana.Values;
 
@@ -19,6 +22,17 @@ namespace EndoAshu.StarSavior.Core
 
         public static async Task Load()
         {
+            _potentials.Clear();
+            using (Stream stream = File.OpenRead("./data/potentials.json"))
+            {
+                Dictionary<string, string> data = JsonSerializer.Deserialize<Dictionary<string, string>>(stream)!;
+
+                foreach(var entry in data)
+                {
+                    _potentials[entry.Key] = entry.Value;
+                }
+            }
+
             _journey.Clear();
             using (Stream stream = File.OpenRead("./data/journey_data.json"))
             {

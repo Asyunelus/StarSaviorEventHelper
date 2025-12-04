@@ -5,12 +5,16 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
 {
     public sealed class V0_2_Beta_Powered_V0_1_SearchEngine : AbstractSearchEngine
     {
-        public override bool IsRecommend => DataServer.VERSION_CODE <= 0_000_002_01;
-        public V0_2_Beta_Powered_V0_1_SearchEngine() : base("v0.2-beta-powered-v0.1-beta", "v0.1-beta를 기반으로 수정한 검색 엔진입니다.\n아르카나 카드 인식 로직을 일부 최적화하여 더 빠르고 낮은 성능으로 사용할 수 있게 개선한 버전입니다.")
+        public override bool IsRecommend => DataServer.VERSION_CODE < 0_000_003_00;
+
+        private AbstractOcrReader reader;
+
+        public V0_2_Beta_Powered_V0_1_SearchEngine(AbstractOcrReader reader) : base("v0.2-beta-powered-v0.1-beta", "v0.1-beta를 기반으로 수정한 검색 엔진입니다.\n아르카나 카드 인식 로직을 일부 최적화하여 더 빠르고 낮은 성능으로 사용할 수 있게 개선한 버전입니다.")
         {
+            this.reader = reader;
         }
 
-        protected override async Task<SearchResult> InternalSearch(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        protected override async Task<SearchResult> InternalSearch(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT evTypeRect = GetEventTypeRect(resType, rect);
             string evType = reader.Capture(evTypeRect);
@@ -27,11 +31,11 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
                     int match = ImageMatcher.IsMatch(mark, "./images/detect/na.png");
                     if (match >= 5 || evType.Contains("여정"))
                     {
-                        return await SearchJourney(reader, window, resType, rect);
+                        return await SearchJourney(window, resType, rect);
                     }
                     else
                     {
-                        return await SearchArcana(reader, window, resType, rect);
+                        return await SearchArcana(window, resType, rect);
                     }
                 }
 
@@ -42,7 +46,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
             }
         }
 
-        private async Task<SearchResult> SearchJourney(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        private async Task<SearchResult> SearchJourney(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT eventNameRect = GetEventNameRect(resType, rect);
             string eventName = reader.Capture(eventNameRect);
@@ -80,7 +84,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
             });
         }
 
-        private async Task<SearchResult> SearchArcana(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        private async Task<SearchResult> SearchArcana(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT eventNameRect = GetEventNameRect(resType, rect);
             string eventName = reader.Capture(eventNameRect);

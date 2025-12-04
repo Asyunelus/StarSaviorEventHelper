@@ -27,18 +27,28 @@ namespace StarSaviorAssistant
             public string FixedOutcome { get; set; } = string.Empty;
             public string SuccessOutcome { get; set; } = string.Empty;
             public string FailureOutcome { get; set; } = string.Empty;
+
+            public ChoiceItem()
+            {
+
+            }
+
+            public ChoiceItem(string title, string fixedOutcome, string successOutcome, string failureOutcome)
+            {
+                Title = title;
+                FixedOutcome = fixedOutcome;
+                SuccessOutcome = successOutcome;
+                FailureOutcome = failureOutcome;
+            }
         }
 
         private CancellationTokenSource? _cts;
         private bool _isAutoRefreshEnabled = false;
         private volatile bool _isRefreshing = false;
         private RefreshState _refreshState = RefreshState.Wait;
-        private OcrReader? _ocrReader;
 
         public MainWindow()
         {
-            _ocrReader = new OcrReader("./tdata");
-
             InitializeComponent();
 
             Topmost = Settings.TopMost;
@@ -46,20 +56,19 @@ namespace StarSaviorAssistant
 
             this.Closed += MainWindow_Closed;
 
-            ChoicesListBox.ItemsSource = new List<ChoiceItem>()
+            ChoicesListBox.ItemsSource = new List<ChoiceItem>();
+            /*
             {
-                new ChoiceItem() { Title = "선택지A", FixedOutcome = "스태미나 +10" },
-                new ChoiceItem() { Title = "선택지B", FixedOutcome = "스태미나 +10", SuccessOutcome = "힘+20" },
-                new ChoiceItem() { Title = "선택지C", FixedOutcome = "스태미나 +10",  FailureOutcome = "힘-30"},
-                new ChoiceItem() { Title = "선택지D", FixedOutcome = "스태미나 +10", SuccessOutcome = "힘+20", FailureOutcome = "힘-30"}
-            };
+                new ChoiceItem("선택지A", "스태미나 +10, 공격의 성흔", string.Empty, string.Empty),
+                new ChoiceItem("선택지B", "스태미나 +10", "힘+20", string.Empty),
+                new ChoiceItem("선택지C", "스태미나 +10", string.Empty, "힘-30"),
+                new ChoiceItem("선택지D", "스태미나 +10", "힘+20", "힘-30")
+            };*/
         }
 
         private void MainWindow_Closed(object? sender, System.EventArgs e)
         {
             _cts?.Cancel();
-            _ocrReader?.Dispose();
-            _ocrReader = null;
         }
 
         private void AutoRefresh_Checked(object sender, RoutedEventArgs e)
@@ -148,9 +157,9 @@ namespace StarSaviorAssistant
             _refreshState = RefreshState.Search;
             UpdateUIState();
 
-            if (SearchEngine.Current != null && _ocrReader != null)
+            if (SearchEngine.Current != null)
             {
-                SearchResult res = await SearchEngine.Current.Search(_ocrReader, "스타세이비어");
+                SearchResult res = await SearchEngine.Current.Search("스타세이비어");
 
                 if (res.IsFailed)
                 {

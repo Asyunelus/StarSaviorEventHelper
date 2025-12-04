@@ -5,11 +5,13 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
 {
     public sealed class V0_1_Beta_SearchEngine : AbstractSearchEngine
     {
-        public V0_1_Beta_SearchEngine() : base("v0.1-beta")
+        private AbstractOcrReader reader;
+        public V0_1_Beta_SearchEngine(AbstractOcrReader reader) : base("v0.1-beta")
         {
+            this.reader = reader;
         }
 
-        protected override async Task<SearchResult> InternalSearch(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        protected override async Task<SearchResult> InternalSearch(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT evTypeRect = GetEventTypeRect(resType, rect);
             string evType = reader.Capture(evTypeRect);
@@ -26,11 +28,11 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
                     int match = ImageMatcher.IsMatch(mark, "./images/detect/na.png");
                     if (match >= 5 || evType.Contains("여정"))
                     {
-                        return await SearchJourney(reader, window, resType, rect);
+                        return await SearchJourney(window, resType, rect);
                     }
                     else
                     {
-                        return await SearchArcana(reader, window, resType, rect);
+                        return await SearchArcana(window, resType, rect);
                     }
                 }
 
@@ -41,7 +43,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
             }
         }
 
-        private async Task<SearchResult> SearchJourney(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        private async Task<SearchResult> SearchJourney(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT eventNameRect = GetEventNameRect(resType, rect);
             string eventName = reader.Capture(eventNameRect);
@@ -79,7 +81,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
             });
         }
 
-        private async Task<SearchResult> SearchArcana(OcrReader reader, IntPtr window, ResolutionType resType, RECT rect)
+        private async Task<SearchResult> SearchArcana(IntPtr window, ResolutionType resType, RECT rect)
         {
             RECT eventNameRect = GetEventNameRect(resType, rect);
             string eventName = reader.Capture(eventNameRect);

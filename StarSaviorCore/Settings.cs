@@ -30,6 +30,9 @@ namespace EndoAshu.StarSavior.Core
         public static bool TopMost { get; set; } = false;
         public static string Theme { get; set; } = "Dark";
 
+        private static string _engine { get; set; } = string.Empty;
+        public static AbstractSearchEngine? Engine => SearchEngine.Items.FirstOrDefault(e => e.Name == _engine);
+
         public static void Load()
         {
             if (!File.Exists(saveConfig))
@@ -43,7 +46,7 @@ namespace EndoAshu.StarSavior.Core
                 {
                     var data = JsonSerializer.Deserialize<SaveData>(fs)!;
 
-                    SearchEngine.Current = SearchEngine.Items.FirstOrDefault(e => e.Name == data.Engine);
+                    _engine = data.Engine;
                     LatestDataVersion = data.LatestDataVersion;
                     TopMost = data.TopMost;
                     Theme = data.Theme;
@@ -58,7 +61,7 @@ namespace EndoAshu.StarSavior.Core
         {
             SaveData data = new SaveData();
 
-            data.Engine = SearchEngine.Current == null ? SearchEngine.Items.First().Name : SearchEngine.Current.Name;
+            data.Engine = SearchEngine.Current == null ? string.Empty : SearchEngine.Current.Name;
             data.LatestDataVersion = LatestDataVersion;
             data.TopMost = TopMost;
             data.Theme = Theme;

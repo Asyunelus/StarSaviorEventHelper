@@ -19,7 +19,7 @@
             Description = description;
         }
 
-        public async Task<SearchResult> Search(OcrReader reader, string windowName, int timeoutMilliseconds = 4000)
+        public async Task<SearchResult> Search(string windowName, int timeoutMilliseconds = 4000)
         {
             IntPtr window = WindowUtil.FindTargetStartsWith(windowName);
             if (window != IntPtr.Zero)
@@ -28,7 +28,7 @@
                 float res = (float)rect.Width / rect.Height;
                 ResolutionType resType = res <= 1.9f ? ResolutionType.S16_9 : ResolutionType.S21_9;
 
-                var task = InternalSearch(reader, window, resType, rect);
+                var task = InternalSearch(window, resType, rect);
                 var timeoutTask = Task.Delay(timeoutMilliseconds);
 
                 var completedTask = await Task.WhenAny(task, timeoutTask);
@@ -48,7 +48,7 @@
             }
         }
 
-        protected abstract Task<SearchResult> InternalSearch(OcrReader reader, IntPtr window, ResolutionType resolutionType, RECT windowRect);
+        protected abstract Task<SearchResult> InternalSearch(IntPtr window, ResolutionType resolutionType, RECT windowRect);
 
 
         protected RECT GetCardRect(ResolutionType type, RECT rect)

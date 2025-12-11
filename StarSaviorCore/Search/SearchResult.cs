@@ -15,6 +15,7 @@ namespace EndoAshu.StarSavior.Core.Search
         Failed_NotFoundArcanaData,
         Failed_Exception,
         Failed_SearchWait,
+        Failed_OCREngineNotSet,
         Failed_EngineNotSet,
         Failed_Unknown
     }

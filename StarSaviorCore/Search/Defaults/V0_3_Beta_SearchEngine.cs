@@ -4,13 +4,13 @@ using System.Drawing;
 
 namespace EndoAshu.StarSavior.Core.Search.Defaults
 {
-    public sealed class V0_2_Fast_Beta_SearchEngine : AbstractSearchEngine
+    public class V0_3_Beta_SearchEngine : AbstractSearchEngine
     {
-        public override bool IsRecommend => DataServer.VERSION_CODE < 0_000_004_00;
+        public override bool IsRecommend => false;
         public override bool IsExperimental => true;
         public override string OCREngineId => PaddleOCR.OCR_ID;
 
-        public V0_2_Fast_Beta_SearchEngine() : base("v0.2-fast-beta", "아르카나 카드 인식 로직을 일부 최적화하여 더 빠르고 낮은 성능으로 사용할 수 있게 개선한 버전입니다.\nOCR 엔진이 다릅니다.")
+        public V0_3_Beta_SearchEngine() : base("v0.3-beta", "v0.2-fast-beta에서 개선된 엔진입니다. 불안정할 수 있습니다.")
         {
         }
 
@@ -20,22 +20,17 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
             string evType = reader.Capture(evTypeRect, 150).Replace(" ", "");
             if (evType.Contains("이벤트"))
             {
-
-                RECT markRect = GetEventIcon(resType, rect);
-                using (Bitmap mark = reader.CaptureBitmap(markRect))
+                if (evType.Contains("여정") || evType.Contains("날씨") || evType.Contains("토벌") || evType.Contains("원정"))
                 {
-                    if (evType.Contains("여정"))
-                    {
-                        return await SearchJourney(reader, window, resType, rect);
-                    }
-                    else if (evType.Contains("아르카나"))
-                    {
-                        return await SearchArcana(reader, window, resType, rect);
-                    }
-                    else
-                    {
-                        return new SearchResult(SearchResultType.Failed_NotFoundEventType, evType);
-                    }
+                    return await SearchJourney(reader, window, resType, rect);
+                }
+                else if (evType.Contains("아르카나"))
+                {
+                    return await SearchArcana(reader, window, resType, rect);
+                }
+                else
+                {
+                    return new SearchResult(SearchResultType.Failed_NotFoundEventType, evType);
                 }
             }
             else
@@ -43,6 +38,7 @@ namespace EndoAshu.StarSavior.Core.Search.Defaults
                 return new SearchResult(SearchResultType.Failed_NotEventOnScreen);
             }
         }
+
         protected override async Task<SearchResult> FindCardEventAsync(AbstractOCRReader reader, Bitmap cardImage, string eventName, params string[] eventSelect)
         {
 #pragma warning disable CA1416

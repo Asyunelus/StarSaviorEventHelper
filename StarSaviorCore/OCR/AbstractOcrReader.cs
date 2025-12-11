@@ -5,9 +5,11 @@ using System.Drawing.Imaging;
 namespace EndoAshu.StarSavior.Core {
 
 #pragma warning disable CA1416
-    public abstract class AbstractOcrReader : IDisposable
+    public abstract class AbstractOCRReader : IDisposable
     {
-        public AbstractOcrReader()
+        public abstract string Id { get; }
+
+        public AbstractOCRReader()
         {
         }
 
@@ -87,7 +89,12 @@ namespace EndoAshu.StarSavior.Core {
             }
         }
 
-        public abstract string OnProcess(Bitmap bitmap);
+        public string OnProcess(Bitmap bitmap)
+        {
+            return InternalOnProcess(bitmap);
+        }
+
+        protected abstract string InternalOnProcess(Bitmap bitmap);
 
         public static Bitmap MakeGrayscale(Bitmap original)
         {

@@ -4,8 +4,10 @@ using Tesseract;
 
 namespace EndoAshu.StarSavior.Core
 {
-    public sealed class TesseractOCR : AbstractOcrReader
+    public sealed class TesseractOCR : AbstractOCRReader
     {
+        public const string OCR_ID = "tesseract";
+        public override string Id => OCR_ID;
         private TesseractEngine? engine;
         public TesseractOCR(string dataPath) : base()
         {
@@ -13,7 +15,7 @@ namespace EndoAshu.StarSavior.Core
             engine.DefaultPageSegMode = PageSegMode.SingleLine;
         }
 
-        public override string OnProcess(Bitmap bitmap)
+        protected override string InternalOnProcess(Bitmap bitmap)
         {
             using (var page = engine.Process(bitmap))
             {

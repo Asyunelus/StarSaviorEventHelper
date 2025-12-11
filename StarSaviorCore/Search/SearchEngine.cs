@@ -1,43 +1,64 @@
-﻿using EndoAshu.StarSavior.Core.Search.Defaults;
+﻿using EndoAshu.StarSavior.Core.OCR;
+using EndoAshu.StarSavior.Core.Search.Defaults;
 
 namespace EndoAshu.StarSavior.Core.Search
 {
     public class SearchEngine
     {
-        public static AbstractSearchEngine? Current;
+        public static AbstractSearchEngine? _current;
+        public static AbstractSearchEngine? Current
+        {
+            get => _current;
+            set
+            {
+                if (_current != value)
+                {
+                    _current = value;
+                    if (_current != null)
+                    {
+                        _ = LoadOCREngineSafe(_current.OCREngineId);
+                    }
+                }
+            }
+        }
+        private static async Task LoadOCREngineSafe(string ocrId)
+        {
+            try
+            {
+                await OCREngine.UpdateEngineAsync(ocrId);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"OCR Engine Load Failed: {ex.Message}");
+            }
+        }
 
         private static readonly Dictionary<string, AbstractSearchEngine> _engines = new Dictionary<string, AbstractSearchEngine>();
 
         public static ICollection<AbstractSearchEngine> Items => _engines.Values;
-        private static TesseractOCR? _tesseractOCR;
-        private static PaddleOCR? _paddleOCR;
-
 
         static SearchEngine()
         {
         }
 
         public static void Initialize() { 
-            _tesseractOCR = new TesseractOCR("./tdata");
-            _paddleOCR = new PaddleOCR("./pdata");
             
-            var defaultRecommend = new V0_2_Fast_Beta_SearchEngine(_paddleOCR);
+            var defaultRecommend = new V0_2_Fast_Beta_SearchEngine();
 
             Register(defaultRecommend);
-            Register(new V0_2_Fast_Alpha_SearchEngine(_tesseractOCR));
-            Register(new V0_2_Beta_SearchEngine(_tesseractOCR));
-            Register(new V0_2_Beta_Powered_V0_1_2_SearchEngine(_tesseractOCR));
-            Register(new V0_2_Beta_Powered_V0_1_SearchEngine(_tesseractOCR));
-            Register(new V0_1_2_Beta_SearchEngine(_tesseractOCR));
-            Register(new V0_1_Beta_SearchEngine(_tesseractOCR));
+            Register(new V0_2_Fast_Alpha_SearchEngine());
+            Register(new V0_3_Beta_SearchEngine());
+            Register(new V0_2_Beta_SearchEngine());
+            Register(new V0_2_Beta_Powered_V0_1_2_SearchEngine());
+            Register(new V0_2_Beta_Powered_V0_1_SearchEngine());
+            Register(new V0_1_2_Beta_SearchEngine());
+            Register(new V0_1_Beta_SearchEngine());
 
             Current = Settings.Engine ?? defaultRecommend;
         }
 
         ~SearchEngine()
         {
-            _tesseractOCR?.Dispose();
-            _tesseractOCR = null;
         }
 
         private static void Register(AbstractSearchEngine engine) {

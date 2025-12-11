@@ -3,8 +3,11 @@ using System.Drawing;
 
 namespace EndoAshu.StarSavior.Core
 {
-    public class PaddleOCR : AbstractOcrReader
+    public class PaddleOCR : AbstractOCRReader
     {
+        public const string OCR_ID = "paddlev5";
+        public override string Id => OCR_ID;
+
         private PaddleOCREngine? engine;
 
         public PaddleOCR(string modelPathroot)
@@ -17,7 +20,7 @@ namespace EndoAshu.StarSavior.Core
             engine = new PaddleOCREngine(config, oCRParameter);
         }
 
-        public override string OnProcess(Bitmap bitmap)
+        protected override string InternalOnProcess(Bitmap bitmap)
         {
             if (engine != null)
             {

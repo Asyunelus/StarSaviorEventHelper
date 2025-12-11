@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:StarSaviorAssistant"
         mc:Ignorable="d"
-        Title="StarSavior 이벤트 화면 인식기 (v0.2-beta)" 
+        Title="스세 이벤트 화면 인식기" 
         Width="400"
         SizeToContent="Height"
         Background="Transparent" 

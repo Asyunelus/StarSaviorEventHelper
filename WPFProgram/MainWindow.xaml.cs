@@ -111,6 +111,7 @@ namespace StarSaviorAssistant
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
             SettingsWindow settingsWin = new SettingsWindow(this);
+            settingsWin.Owner = this;
             settingsWin.ShowDialog();
         }
         private void UpdateUIState()
@@ -159,7 +160,7 @@ namespace StarSaviorAssistant
 
             if (SearchEngine.Current != null)
             {
-                SearchResult res = await SearchEngine.Current.Search("스타세이비어");
+                SearchResult res = await SearchEngine.Current.Search(4000, "StarSavior", "스타세이비어");
 
                 if (res.IsFailed)
                 {

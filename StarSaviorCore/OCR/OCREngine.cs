@@ -33,6 +33,7 @@
             return id switch
             {
                 TesseractOCR.OCR_ID => new TesseractOCR("./tdata"),
+                //PaddleOCR.OCR_ID => new TesseractOCR("./tdata"),
                 PaddleOCR.OCR_ID => new PaddleOCR("./pdata"),
                 _ => null
             };

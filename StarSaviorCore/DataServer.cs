@@ -22,9 +22,10 @@ namespace EndoAshu.StarSavior.Core
             [JsonRequired]
             public List<string> DataJsonFiles { get; set; } = new List<string>();
         }
-        public static readonly string BASE_PATH = "https://raw.githubusercontent.com/Asyunelus/StarSaviorEventHelperDB/refs/heads/main/";
+        //public static readonly string BASE_PATH = "https://raw.githubusercontent.com/Asyunelus/StarSaviorEventHelperDB/refs/heads/main/";
+        public static readonly string BASE_PATH = "https://raw.githubusercontent.com/kanohban/StarSaviorArcanaDB/refs/heads/gh-pages/";
 
-        public static readonly string VERSION = "v0.3.0-beta";
+        public static readonly string VERSION = "v0.3.1-beta";
 
         /// <summary>
         /// Version 코드 작성법
@@ -37,6 +38,6 @@ namespace EndoAshu.StarSavior.Core
         /// 1.3.4일 경우 001_003_04
         /// 
         /// </summary>
-        public static readonly long VERSION_CODE = 0_000_003_00;
+        public static readonly long VERSION_CODE = 0_000_003_01;
     }
 }

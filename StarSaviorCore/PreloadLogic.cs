@@ -46,6 +46,7 @@ namespace EndoAshu.StarSavior.Core
             client.DefaultRequestHeaders.Add("Referer", "https://arca.live/b/starsavior");
             client.DefaultRequestHeaders.Accept.ParseAdd("text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8");
 
+            /*
             updateUI(1, TOTAL_LOAD_STEP, "프로그램 업데이트가 있는지 확인하는중...", 0, "Fetch Github Server...");
 
             string pubJson = await FetchStringWithProgressAsync(client, $"{DataServer.BASE_PATH}publish.json?cache_buster={Guid.NewGuid().ToString()}", progress =>
@@ -61,7 +62,11 @@ namespace EndoAshu.StarSavior.Core
                 return;
             }
 
-            if (pubData.Version != DataServer.VERSION)
+            if (pubData.Version != DataServer.VERSION
+#if DEBUG
+                && false
+#endif
+                )
             {
                 if (showYesNo("업데이트 존재", $"현재 버전 : {DataServer.VERSION}\n새로운 버전 : {pubData.Version}\n\n업데이트를 진행해야 실행이 가능합니다.\n진행하시겠습니까?"))
                 {
@@ -88,21 +93,33 @@ namespace EndoAshu.StarSavior.Core
 
             updateUI(2, TOTAL_LOAD_STEP, "새로운 선택지가 있는지 확인하는중...", 0, "Fetch Github Server...");
 
-            await Task.Delay(100);
+            await Task.Delay(100);*/
 
             updateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", 0, "Compare Data Hash...");
             await Task.Delay(100);
 
             int idx = 0;
 
-            foreach (string filePath in pubData.DataJsonFiles)
+            string[] DataJsonFiles =
             {
-                await FetchUpdate(client, pubData.DataVersion, filePath, ++idx, pubData.DataJsonFiles.Count, updateUI);
+                "./data/cards.json",
+                "./data/cards_event.json",
+                "./data/cards_stats.json",
+                "./data/flavor_text.json",
+                "./data/gacha_data.json",
+                "./data/journey_data.json",
+                "./data/potentials.json",
+                "./data/stat_config.json"
+            };
+
+            foreach (string filePath in DataJsonFiles)
+            {
+                await FetchUpdate(client, "<none>", filePath, ++idx, DataJsonFiles.Length, updateUI);
             }
             await Task.Delay(50);
 
-            Settings.LatestDataVersion = pubData.DataVersion;
-            Settings.Save();
+            //Settings.LatestDataVersion = pubData.DataVersion;
+            //Settings.Save();
 
             updateUI(4, TOTAL_LOAD_STEP, "선택지 데이터를 불러오는중...", 0, "선택지 데이터 파일을 읽는중...");
             await EventLoader.Load();
@@ -147,22 +164,22 @@ namespace EndoAshu.StarSavior.Core
 
         private static async Task FetchUpdate(HttpClient client, string dataVer, string filePath, int idx, int maxIdx, UpdateUIFunction updateUI)
         {
-            if (!File.Exists(filePath) || Settings.LatestDataVersion != dataVer)
+            var baseUri = new Uri(DataServer.BASE_PATH);
+            var result = new Uri(baseUri, filePath);
+
+            string res = await FetchStringWithProgressAsync(client, result.ToString(), progress =>
             {
-                var baseUri = new Uri(DataServer.BASE_PATH);
-                var result = new Uri(baseUri, filePath);
+                updateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", (int)(progress * 100.0f), $"Download File : {Path.GetFileName(filePath)} ({idx}/{maxIdx})");
+            });
 
-                string res = await FetchStringWithProgressAsync(client, result.ToString(), progress =>
-                {
-                    updateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", (int)(progress * 100.0f), $"Download File : {Path.GetFileName(filePath)} ({idx}/{maxIdx})");
-                });
 
+            if (!File.Exists(filePath) || CalculateSha256Hash(res) != CalculateSha256Hash(File.ReadAllText(filePath)))
+            {
                 updateUI(3, TOTAL_LOAD_STEP, "데이터를 저장하는중...", 100, $"Save File : {Path.GetFileName(filePath)} ({idx}/{maxIdx})");
                 File.WriteAllText(filePath, res);
-            }
-            else
+            } else
             {
-                updateUI(3, TOTAL_LOAD_STEP, "데이터를 비교하는중...", 100, $"{Path.GetFileName(filePath)} file is the latest version. Skip... ({idx}/{maxIdx})");
+                updateUI(3, TOTAL_LOAD_STEP, "데이터를 저장하는중...", 100, $"Save File : {Path.GetFileName(filePath)} is already exists. skip. ({idx}/{maxIdx})");
             }
             await Task.Delay(100);
         }
